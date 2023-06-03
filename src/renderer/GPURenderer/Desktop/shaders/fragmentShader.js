@@ -10,7 +10,10 @@ export const fragmentShader = () => {
     varying vec4 tileRect;
     varying float tileID;
 
+    #include <logdepthbuf_pars_fragment>
+
     void main() {
+      #include <logdepthbuf_fragment>
       gl_FragColor = vec4(baseColor * targetColor, targetAlpha);
 
       vec2 uv = gl_PointCoord;

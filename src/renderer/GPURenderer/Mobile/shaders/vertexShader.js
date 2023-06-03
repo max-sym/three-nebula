@@ -15,6 +15,8 @@ export const vertexShader = () => {
     varying vec3 targetColor;
     varying float targetAlpha;
     varying vec4 tileRect;
+    #include <common>
+    #include <logdepthbuf_pars_vertex>
 
     void main() {
       vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
@@ -28,6 +30,7 @@ export const vertexShader = () => {
 
       gl_PointSize = ((size * ${SIZE_ATTENUATION_FACTOR}) / -mvPosition.z);
       gl_Position = projectionMatrix * mvPosition;
+      #include <logdepthbuf_vertex>
     }
 `;
 };

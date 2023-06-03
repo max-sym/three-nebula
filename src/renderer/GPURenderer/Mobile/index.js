@@ -1,4 +1,4 @@
-import { ParticleBuffer, Target, TextureAtlas, UniqueList } from '../common';
+import { ParticleBuffer, TextureAtlas, UniqueList } from '../common';
 import { fragmentShader, vertexShader } from './shaders';
 
 import BaseRenderer from '../../BaseRenderer';
@@ -46,6 +46,7 @@ export default class MobileGPURenderer extends BaseRenderer {
       transparent,
     });
 
+    this.container = container;
     this.camera = camera;
     this.targetPool = new Pool();
     this.uniqueList = new UniqueList(maxParticles);
@@ -58,7 +59,7 @@ export default class MobileGPURenderer extends BaseRenderer {
     this.points.frustumCulled = false;
     this.shouldDebugTextureAtlas = shouldDebugTextureAtlas;
 
-    container.add(this.points);
+    this.container.add(this.points);
   }
 
   onSystemUpdate(system) {
@@ -75,80 +76,6 @@ export default class MobileGPURenderer extends BaseRenderer {
         textureAtlas.atlasTexture.image.height
       );
     }
-  }
-
-  /**
-   * Pools the particle target if it does not exist.
-   * Updates the target and maps particle properties to the point.
-   *
-   * @param {Particle}
-   */
-  onParticleCreated(particle) {
-    if (!particle.target) {
-      particle.target = this.targetPool.get(Target, THREE);
-      this.uniqueList.add(particle.id);
-    }
-
-    this.updateTarget(particle).mapParticleTargetPropsToPoint(particle);
-  }
-
-  /**
-   * Maps particle properties to the point if the particle has a target.
-   *
-   * @param {Particle}
-   */
-  onParticleUpdate(particle) {
-    if (!particle.target) {
-      return;
-    }
-
-    this.updateTarget(particle).mapParticleTargetPropsToPoint(particle);
-  }
-
-  /**
-   * Resets and clears the particle target.
-   *
-   * @param {Particle}
-   */
-  onParticleDead(particle) {
-    if (!particle.target) {
-      return;
-    }
-
-    particle.target.reset();
-    this.mapParticleTargetPropsToPoint(particle);
-
-    particle.target = null;
-  }
-
-  /**
-   * Maps all mutable properties from the particle to the target.
-   *
-   * @param {Particle}
-   * @return {GPURenderer}
-   */
-  updateTarget(particle) {
-    const { position, rotation, scale, radius, color, alpha, body, id } = particle;
-    const { r, g, b } = color;
-
-    particle.target.position.copy(position);
-    particle.target.rotation.copy(rotation);
-    particle.target.size = scale * radius;
-    particle.target.color.setRGB(r, g, b);
-    particle.target.alpha = alpha;
-    particle.target.index = this.uniqueList.find(id);
-
-    if (body && body instanceof THREE.Sprite) {
-      const { map } = body.material;
-
-      particle.target.texture = map;
-      particle.target.textureIndex = this.getTextureID(
-        map,
-        this.shouldDebugTextureAtlas
-      );
-    }
-
-    return this;
   }
 
   /**
