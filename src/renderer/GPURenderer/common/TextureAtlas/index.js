@@ -99,8 +99,6 @@ export default class TextureAtlas {
    *
    */
   addTexture(texture) {
-    this.log('Adding texture to atlas:', texture.uuid);
-
     texture.textureIndex = this.entries.length;
     this.entries.push({ texture: texture });
     this.needsUpdate = true;
@@ -143,8 +141,6 @@ export default class TextureAtlas {
     }
 
     const stats = potpack(entries);
-
-    this.log('Rebuilt atlas:', stats);
 
     if (canvas.width != stats.w || canvas.height != stats.h) {
       canvas.width = stats.w;
