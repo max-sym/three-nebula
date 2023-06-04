@@ -59,7 +59,6 @@ export default class GPURenderer extends BaseRenderer {
       uniforms: {
         baseColor: { value: new THREE.Color(baseColor) },
         uTexture: { value: null },
-        FFatlasIndex: { value: null },
         atlasDim: { value: new THREE.Vector2() },
         atlasIndex: { value: null },
       },
