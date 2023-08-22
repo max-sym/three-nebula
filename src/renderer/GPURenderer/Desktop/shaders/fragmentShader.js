@@ -3,12 +3,14 @@ export const fragmentShader = () => {
     uniform vec3 baseColor;
     uniform sampler2D uTexture;
     uniform sampler2D atlasIndex;
-
-    varying float vRotation;
-    varying vec3 targetColor;
-    varying float targetAlpha;
-    varying vec4 tileRect;
-    varying float tileID;
+    
+    flat varying float vRotation;
+    flat varying float vRotationCos;
+    flat varying float vRotationSin;
+    flat varying vec3 targetColor;
+    flat varying float targetAlpha;
+    flat varying vec4 tileRect;
+    flat varying float tileID;
 
     #include <logdepthbuf_pars_fragment>
 
@@ -21,8 +23,8 @@ export const fragmentShader = () => {
 
       float mid = 0.5;
       uv = vec2(
-        cos(vRotation) * (uv.x - mid) - sin(vRotation) * (uv.y - mid) + mid,
-        cos(vRotation) * (uv.y - mid) + sin(vRotation) * (uv.x - mid) + mid
+        vRotationCos * (uv.x - mid) - vRotationSin * (uv.y - mid) + mid,
+        vRotationCos * (uv.y - mid) + vRotationSin * (uv.x - mid) + mid
       );
 
       gl_FragColor = gl_FragColor * texture2D(uTexture, uv);

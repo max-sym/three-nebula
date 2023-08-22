@@ -1,5 +1,5 @@
 {
-  "name": "@max-sym/three-nebula",
+  "name": "max-sym-three-nebula",
   "version": "10.0.3",
   "description": "WebGL based 3D particle engine",
   "main": "./build/cjs/index.js",

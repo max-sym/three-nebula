@@ -13,11 +13,14 @@ export const vertexShader = () => {
     attribute float texID;
     attribute float rotation;
 
-    varying float vRotation;
-    varying vec3 targetColor;
-    varying float targetAlpha;
-    varying vec4 tileRect;
+    flat varying float vRotation;
+    flat varying float vRotationCos;
+    flat varying float vRotationSin;
+    flat varying vec3 targetColor;
+    flat varying float targetAlpha;
+    flat varying vec4 tileRect;
     varying float tileID;
+
     #include <common>
     #include <logdepthbuf_pars_vertex>
 
@@ -26,6 +29,8 @@ export const vertexShader = () => {
       targetColor = color;
       targetAlpha = alpha;
       vRotation = rotation;
+      vRotationCos = cos(rotation);
+      vRotationSin = sin(rotation);
 
       tileID = texID;
       //get the tile rectangle from the atlasIndex texture..
