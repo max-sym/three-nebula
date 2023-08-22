@@ -1,5 +1,4 @@
 import { DATA_TEXTURE_SIZE } from '../../common/TextureAtlas/constants';
-import { SIZE_ATTENUATION_FACTOR } from '../../common/shaders/constants';
 
 export const vertexShader = () => {
   return `
@@ -19,7 +18,9 @@ export const vertexShader = () => {
     flat varying vec3 targetColor;
     flat varying float targetAlpha;
     flat varying vec4 tileRect;
-    varying float tileID;
+    flat varying float tileID;
+
+    uniform float fovFactor; // New uniform for the precomputed value
 
     #include <common>
     #include <logdepthbuf_pars_vertex>
@@ -36,7 +37,7 @@ export const vertexShader = () => {
       //get the tile rectangle from the atlasIndex texture..
       tileRect = texture2D(atlasIndex, vec2((tileID + 0.5) / ${DATA_TEXTURE_SIZE}.0, 0.5));
 
-      gl_PointSize = ((size * ${SIZE_ATTENUATION_FACTOR}) / -mvPosition.z);
+      gl_PointSize = ((size * fovFactor) / -mvPosition.z);
       gl_Position = projectionMatrix * mvPosition;
       #include <logdepthbuf_vertex>
     }

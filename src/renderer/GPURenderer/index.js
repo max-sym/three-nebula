@@ -61,6 +61,7 @@ export default class GPURenderer extends BaseRenderer {
         uTexture: { value: null },
         atlasDim: { value: new THREE.Vector2() },
         atlasIndex: { value: null },
+        fovFactor: { value: 0 },
       },
       vertexShader: vertexShader(),
       fragmentShader: fragmentShader(),
@@ -80,6 +81,13 @@ export default class GPURenderer extends BaseRenderer {
     this.geometry = particleBuffer.geometry;
     this.material = material;
     this.points = new THREE.Points(this.geometry, this.material);
+    this.points.onBeforeRender = function(renderer, scene, camera) {
+      const fovInRadians = (camera.fov * Math.PI) / 180.0;
+      const fovFactor =
+        renderer.domElement.height / (2.0 * Math.tan(fovInRadians / 2.0));
+
+      this.material.uniforms.fovFactor.value = fovFactor;
+    };
     this.points.frustumCulled = false;
     this.shouldDebugTextureAtlas = shouldDebugTextureAtlas;
 
