@@ -53,8 +53,8 @@ export default class Force extends Behaviour {
    * @param {integer} index - the particle index
    * @return void
    */
-  mutate(particle, time, index) {
-    this.energize(particle, time, index);
+  mutate(particle, time) {
+    this.energize(particle, time);
 
     particle.acceleration.add(this.force);
   }

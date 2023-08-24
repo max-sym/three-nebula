@@ -516,11 +516,11 @@ export default class Emitter extends Particle {
    *
    * @return {Emitter}
    */
-  createParticle() {
+  createParticle(subindex) {
     const particle = this.parent.pool.get(Particle);
     const index = this.particles.length;
 
-    this.setupParticle(particle, index);
+    this.setupParticle(particle, index, subindex, this.cID);
     this.parent && this.parent.dispatch(PARTICLE_CREATED, particle);
     this.bindEmitterEvent && this.dispatch(PARTICLE_CREATED, particle);
 
@@ -534,8 +534,11 @@ export default class Emitter extends Particle {
    * @param {Particle} particle - The particle to setup
    * @return void
    */
-  setupParticle(particle, index) {
+  setupParticle(particle, index, subindex, fractions) {
     const { initializers, behaviours } = this;
+
+    particle.subindex = subindex;
+    particle.fractions = fractions;
 
     InitializerUtil.initialize(this, particle, initializers);
 
@@ -569,8 +572,7 @@ export default class Emitter extends Particle {
       this.destroy();
     }
 
-    if (this.isEmitting)
-    {
+    if (this.isEmitting) {
       this.generate(time);
     }
 
@@ -586,8 +588,7 @@ export default class Emitter extends Particle {
         this.bindEmitterEvent && this.dispatch(PARTICLE_DEAD, particle);
         this.parent.pool.expire(particle.reset());
         this.particles.splice(i, 1);
-        if(this.particles.length === 0)
-        {
+        if (this.particles.length === 0) {
           this.parent && this.parent.dispatch(SYSTEM_UPDATE);
         }
       }
@@ -629,12 +630,12 @@ export default class Emitter extends Particle {
 
     integrate(this, time, damping, integrationType);
 
-    let index = this.particles.length;
+    let i = this.particles.length;
 
-    while (index--) {
-      const particle = this.particles[index];
+    while (i--) {
+      const particle = this.particles[i];
 
-      particle.update(time, index);
+      particle.update(time);
       integrate(particle, time, damping, integrationType);
 
       this.parent && this.parent.dispatch(PARTICLE_UPDATE, particle);
@@ -657,7 +658,7 @@ export default class Emitter extends Particle {
       }
 
       while (i--) {
-        this.createParticle();
+        this.createParticle(i);
       }
 
       this.totalEmitTimes = 0;
@@ -675,7 +676,7 @@ export default class Emitter extends Particle {
       }
 
       while (i--) {
-        this.createParticle();
+        this.createParticle(i);
       }
     }
   }

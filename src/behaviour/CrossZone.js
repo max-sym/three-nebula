@@ -51,11 +51,10 @@ export default class CrossZone extends Behaviour {
    * @see {@link '../zone/Zone.js'} crossing
    * @param {object} particle - the particle to apply the behaviour to
    * @param {number} time - engine time
-   * @param {integer} index - the particle index
    * @return void
    */
-  mutate(particle, time, index) {
-    this.energize(particle, time, index);
+  mutate(particle, time) {
+    this.energize(particle, time);
 
     this.zone.crossing.call(this.zone, particle);
   }

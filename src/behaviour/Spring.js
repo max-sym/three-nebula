@@ -54,11 +54,10 @@ export default class Spring extends Behaviour {
    *
    * @param {object} particle - the particle to apply the behaviour to
    * @param {number} time - engine time
-   * @param {integer} index - the particle index
    * @return void
    */
-  mutate(particle, time, index) {
-    this.energize(particle, time, index);
+  mutate(particle, time) {
+    this.energize(particle, time);
 
     particle.velocity.x += (this.pos.x - particle.position.x) * this.spring;
     particle.velocity.y += (this.pos.y - particle.position.y) * this.spring;

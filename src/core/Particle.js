@@ -256,10 +256,9 @@ export default class Particle {
    * in which case it will be destroyed.
    *
    * @param {number} time - Integration time
-   * @param {integer} index - Particle index
    * @return void
    */
-  update(time, index) {
+  update(time) {
     if (!this.sleep) {
       this.age += time;
 
@@ -268,8 +267,8 @@ export default class Particle {
       while (i--) {
         let behaviour = this.behaviours[i];
 
-        //behaviour && 
-        behaviour.applyBehaviour(this, time, index);
+        //behaviour &&
+        behaviour.applyBehaviour(this, time);
       }
     }
 

@@ -106,11 +106,10 @@ export default class Attraction extends Behaviour {
    *
    * @param {Particle} particle - the particle to apply the behaviour to
    * @param {number} time - particle engine time
-   * @param {integer} index - the particle index
    * @return void
    */
-  mutate(particle, time, index) {
-    this.energize(particle, time, index);
+  mutate(particle, time) {
+    this.energize(particle, time);
 
     this.attractionForce.copy(this.targetPosition);
     this.attractionForce.sub(particle.position);

@@ -163,11 +163,10 @@ export default class Rotate extends Behaviour {
    * @see http://stackoverflow.com/questions/21622956/how-to-convert-direction-vector-to-euler-angles
    * @param {object} particle - the particle to apply the behaviour to
    * @param {number} time - engine time
-   * @param {integer} index - the particle index
    * @return void
    */
-  mutate(particle, time, index) {
-    this.energize(particle, time, index);
+  mutate(particle, time) {
+    this.energize(particle, time);
 
     switch (this.rotationType) {
       // orients the particle in the direction it is moving

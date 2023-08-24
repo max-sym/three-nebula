@@ -49,10 +49,10 @@ export default class Collision extends Behaviour {
    *
    * @param {Particle} particle - the particle to apply the behaviour to
    * @param {number} time - particle engine time
-   * @param {integer} index - the particle index
    * @return void
    */
-  mutate(particle, time, index) {
+  mutate(particle) {
+    const index = particle.index;
     const particles = this.emitter
       ? this.emitter.particles.slice(index)
       : this.particles.slice(index);
