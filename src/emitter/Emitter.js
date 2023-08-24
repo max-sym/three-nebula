@@ -12,7 +12,11 @@ import EventDispatcher, {
   PARTICLE_UPDATE,
   SYSTEM_UPDATE,
 } from '../events';
-import { INTEGRATION_TYPE_EULER, integrate } from '../math';
+import {
+  INTEGRATION_TYPE_EULER,
+  integrate,
+  eulerIntegrationEmitter,
+} from '../math';
 import { Util, uid } from '../utils';
 
 import { InitializerUtil } from '../initializer';
@@ -539,12 +543,11 @@ export default class Emitter extends Particle {
 
     particle.subindex = subindex;
     particle.fractions = fractions;
-
-    InitializerUtil.initialize(this, particle, initializers);
-
-    particle.addBehaviours(behaviours);
     particle.parent = this;
     particle.index = index;
+
+    InitializerUtil.initialize(this, particle, initializers);
+    particle.addBehaviours(behaviours);
 
     this.particles.push(particle);
   }
@@ -628,15 +631,17 @@ export default class Emitter extends Particle {
       : INTEGRATION_TYPE_EULER;
     const damping = 1 - this.damping;
 
-    integrate(this, time, damping, integrationType);
+    eulerIntegrationEmitter(this, time, damping, integrationType);
 
     let i = this.particles.length;
 
     while (i--) {
       const particle = this.particles[i];
+      const fractionedTime = time / particle.fractions;
 
-      particle.update(time);
-      integrate(particle, time, damping, integrationType);
+      particle.update(fractionedTime);
+      particle.parent = this;
+      integrate(particle, fractionedTime, damping, integrationType);
 
       this.parent && this.parent.dispatch(PARTICLE_UPDATE, particle);
       this.bindEmitterEvent && this.dispatch(PARTICLE_UPDATE, particle);
