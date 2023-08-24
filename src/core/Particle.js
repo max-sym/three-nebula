@@ -14,7 +14,7 @@ import {
   DEFAULT_USE_ALPHA,
   DEFAULT_USE_COLOR,
 } from './constants';
-import { Util, uid } from '../utils';
+import { Util } from '../utils';
 
 import { PI } from '../constants';
 import { Vector3D } from '../math';
@@ -24,6 +24,9 @@ import { CORE_TYPE_PARTICLE as type } from './types';
  * A Particle is an object that is emitted by an emitter.
  *
  */
+
+let particleId = 0;
+
 export default class Particle {
   /**
    * Constructs a Particle instance.
@@ -55,7 +58,8 @@ export default class Particle {
      * @desc The particle's unique id
      * @type {number}
      */
-    this.id = `particle-${uid()}`;
+    particleId++;
+    this.id = particleId;
 
     /**
      * @desc The class type.

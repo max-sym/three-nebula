@@ -1,17 +1,17 @@
-export const INITIALIZER_TYPE_ABSTRACT = 'Initializer';
-export const INITIALIZER_TYPE_BODY = 'Body';
-export const INITIALIZER_TYPE_BODY_SPRITE = 'BodySprite';
-export const INITIALIZER_TYPE_TEXTURE = 'Texture';
-export const INITIALIZER_TYPE_LIFE = 'Life';
-export const INITIALIZER_TYPE_MASS = 'Mass';
-export const INITIALIZER_TYPE_POSITION = 'Position';
-export const INITIALIZER_TYPE_ROTATION = 'Rotation';
-export const INITIALIZER_TYPE_RADIUS = 'Radius';
-export const INITIALIZER_TYPE_ZONE = 'Zone';
-export const INITIALIZER_TYPE_VECTOR_VELOCITY = 'VectorVelocity';
-export const INITIALIZER_TYPE_POLAR_VELOCITY = 'PolarVelocity';
-export const INITIALIZER_TYPE_RADIAL_VELOCITY = 'RadialVelocity';
-export const INITIALIZER_TYPE_RATE = 'Rate';
+export const INITIALIZER_TYPE_ABSTRACT = 1;
+export const INITIALIZER_TYPE_BODY = 2;
+export const INITIALIZER_TYPE_BODY_SPRITE = 3;
+export const INITIALIZER_TYPE_TEXTURE = 4;
+export const INITIALIZER_TYPE_LIFE = 5;
+export const INITIALIZER_TYPE_MASS = 6;
+export const INITIALIZER_TYPE_POSITION = 7;
+export const INITIALIZER_TYPE_ROTATION = 8;
+export const INITIALIZER_TYPE_RADIUS = 9;
+export const INITIALIZER_TYPE_ZONE = 10;
+export const INITIALIZER_TYPE_VECTOR_VELOCITY = 11;
+export const INITIALIZER_TYPE_POLAR_VELOCITY = 12;
+export const INITIALIZER_TYPE_RADIAL_VELOCITY = 13;
+export const INITIALIZER_TYPE_RATE = 14;
 export const INITIALIZER_TYPES_THAT_REQUIRE_THREE = [
   INITIALIZER_TYPE_BODY_SPRITE,
   INITIALIZER_TYPE_TEXTURE,

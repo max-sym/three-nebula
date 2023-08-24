@@ -1,5 +1,6 @@
 import { MEASURE, PI } from '../../constants';
 import { MathUtils, Vector3D } from '../../math';
+import { INITIALIZER_TYPE_VECTOR_VELOCITY } from '../types';
 
 import Initializer from '../Initializer';
 
@@ -41,14 +42,18 @@ Velocity.prototype.initialize = (function() {
   var v = new Vector3D(0, 0, 0);
 
   return function initialize(particle) {
-    tha = this.tha * Math.random();
-    this._useV && this.dirVec.copy(this.dir).scalar(this.radiusPan.getValue());
+    if (this.type !== INITIALIZER_TYPE_VECTOR_VELOCITY) {
+      this._useV &&
+        this.dirVec.copy(this.dir).scalar(this.radiusPan.getValue());
+      tha = this.tha * Math.random();
 
-    MathUtils.getNormal(this.dirVec, normal);
-    v.copy(this.dirVec).applyAxisAngle(normal, tha);
-    v.applyAxisAngle(this.dirVec.normalize(), Math.random() * PI * 2);
-
-    particle.velocity.copy(v);
+      MathUtils.getNormal(this.dirVec, normal);
+      v.copy(this.dirVec).applyAxisAngle(normal, tha);
+      v.applyAxisAngle(this.dirVec.normalize(), Math.random() * PI * 2);
+      particle.velocity.copy(v);
+    } else {
+      particle.velocity.copy(this.dir);
+    }
 
     return this;
   };
