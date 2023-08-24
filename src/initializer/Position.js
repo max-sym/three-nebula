@@ -83,7 +83,11 @@ Position.prototype.initialize = (function() {
   let zone;
 
   return function(target) {
-    zone = this.zones[(Math.random() * this.zones.length) >> 0];
+    if (this.zones.length === 1) {
+      zone = this.zones[0];
+    } else {
+      zone = this.zones[~~(Math.random() * this.zones.length)];
+    }
 
     zone.getPosition();
 
