@@ -29,41 +29,11 @@ const eulerIntegration = (particle, time, damping) => {
     return;
   }
 
-  const isLast = 0 === particle.index;
-  const lastInSequence = particle.subindex === 0;
-
-  let oldParticle = particle;
-
-  if (lastInSequence) {
-    if (!isLast) {
-      oldParticle =
-        particle.parent.particles[particle.index - particle.fractions];
-    }
-  } else {
-    if (!isLast) {
-      oldParticle = particle.parent.particles[particle.index + 1];
-    }
-  }
-  try {
-    particle.position.add(oldParticle.velocity.scalar(time));
-    particle.velocity.copy(oldParticle.velocity);
-  } catch (e) {
-    console.log(
-      isLast,
-      lastInSequence,
-      oldParticle,
-      particle.index,
-      particle.parent.particles.length
-    );
-  }
-
-  // particle.acceleration.scalar(1 / particle.mass);
-  particle.acceleration.copy(
-    oldParticle.acceleration.clone().scalar(1 / particle.mass)
-  );
-
+  particle.old.position.copy(particle.position);
+  particle.old.velocity.copy(particle.velocity);
+  particle.acceleration.scalar(1 / particle.mass);
   particle.velocity.add(particle.acceleration.scalar(time));
-
+  particle.position.add(particle.old.velocity.scalar(time));
   damping &&
     particle.velocity.scalar(Math.pow(damping, time / DEFAULT_SYSTEM_DELTA));
   particle.acceleration.clear();

@@ -1,8 +1,8 @@
-export const SYSTEM_UPDATE = 'SYSTEM_UPDATE';
-export const PARTICLE_CREATED = 'PARTICLE_CREATED';
-export const PARTICLE_UPDATE = 'PARTICLE_UPDATE';
-export const PARTICLE_DEAD = 'PARTICLE_DEAD';
-export const EMITTER_ADDED = 'EMITTER_ADDED';
-export const EMITTER_REMOVED = 'EMITTER_REMOVED';
-export const EMITTER_DEAD = 'EMITTER_DEAD';
-export const SYSTEM_UPDATE_AFTER = 'SYSTEM_UPDATE_AFTER';
+export const SYSTEM_UPDATE = 1;
+export const PARTICLE_CREATED = 2;
+export const PARTICLE_UPDATE = 3;
+export const PARTICLE_DEAD = 4;
+export const EMITTER_ADDED = 5;
+export const EMITTER_REMOVED = 6;
+export const EMITTER_DEAD = 7;
+export const SYSTEM_UPDATE_AFTER = 8;

@@ -637,11 +637,12 @@ export default class Emitter extends Particle {
 
     while (i--) {
       const particle = this.particles[i];
-      const fractionedTime = time / particle.fractions;
 
-      particle.update(fractionedTime);
-      particle.parent = this;
-      integrate(particle, fractionedTime, damping, integrationType);
+      if (particle.dead) continue;
+
+      particle.update(time);
+
+      integrate(particle, time, damping, integrationType);
 
       this.parent && this.parent.dispatch(PARTICLE_UPDATE, particle);
       this.bindEmitterEvent && this.dispatch(PARTICLE_UPDATE, particle);

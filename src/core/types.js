@@ -1,3 +1,3 @@
-export const CORE_TYPE_PARTICLE = 'Particle';
-export const CORE_TYPE_POOL = 'Pool';
-export const CORE_TYPE_SYSTEM = 'System';
+export const CORE_TYPE_PARTICLE = 1;
+export const CORE_TYPE_POOL = 2;
+export const CORE_TYPE_SYSTEM = 3;
