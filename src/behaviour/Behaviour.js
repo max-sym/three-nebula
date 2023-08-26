@@ -113,7 +113,7 @@ export default class Behaviour {
    * @return {Vector3D}
    */
   normalizeForce(force) {
-    return force.scalar(MEASURE);
+    return force.multiplyScalar(MEASURE);
   }
 
   /**

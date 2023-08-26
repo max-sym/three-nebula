@@ -53,8 +53,8 @@ export default {
     var p = k.dot(v) * (1 - cos);
 
     v0.copy(k);
-    v0.cross(v).scalar(sin);
+    v0.cross(v).multiplyScalar(sin);
     v0.addValue(v.x * cos, v.y * cos, v.z * cos);
     v0.addValue(k.x * p, k.y * p, k.z * p);
-  }
+  },
 };

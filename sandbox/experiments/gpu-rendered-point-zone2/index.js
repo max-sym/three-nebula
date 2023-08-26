@@ -3,6 +3,7 @@ const {
   Body,
   VectorVelocity,
   Color,
+  AirResistance,
   CrossZone,
   Emitter,
   Force,
@@ -34,32 +35,46 @@ const createSprite = () => {
   return new THREE.Sprite(material);
 };
 
+const velocityForward = new Vector3D(0, 1000, 0);
+
 const createEmitter = side => {
   const emitter = new Emitter();
 
+  emitter.velocity = velocityForward.clone();
+  emitter.damping = 0.0;
+
   return emitter
-    .setSubsteps(50)
+    .setSubsteps(25)
     .setRate(new Rate(1, new Span(0.016 / emitter.substeps)))
     .addInitializers([
       new Body(createSprite()),
       new Mass(1),
       new Life(0.08),
       new Position(new PointZone(0, 0, 0)),
-      new VectorVelocity(new Vector3D(2000 * side, 0, 0), 1),
+      new VectorVelocity(new Vector3D(1000 * side, -800, 0)),
+      new AirResistance(0.4),
     ])
     .addBehaviours([
       new Alpha(1, 0),
       new Scale(0.5, new Span(1, 2)),
       new Color(0x5555ff, 0xff0000),
-      new Gravity(500),
     ])
     .emit();
 };
 
+const emitterL = createEmitter(-1);
+const emitterR = createEmitter(1);
+
+const animateScene = (scene, camera, renderer) => {
+  camera.position.add(velocityForward.clone().multiplyScalar(0.0167));
+  // emitterL.position.add(velocityForward);
+  // emitterR.position.add(velocityForward);
+
+  requestAnimationFrame(() => animateScene(scene, camera, renderer));
+};
+
 window.init = async ({ scene, camera, renderer }) => {
   const system = new ParticleSystem();
-  const emitterL = createEmitter(-1);
-  const emitterR = createEmitter(1);
   const systemRenderer = new GPURenderer(scene, THREE);
 
   camera.position.set(0, -50, 100);
@@ -69,6 +84,8 @@ window.init = async ({ scene, camera, renderer }) => {
     new THREE.MeshBasicMaterial({ color: 0xff0000 })
   );
   scene.add(mesh);
+
+  animateScene(scene, camera, renderer);
 
   return system
     .addEmitter(emitterL)

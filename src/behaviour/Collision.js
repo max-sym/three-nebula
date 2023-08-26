@@ -84,11 +84,11 @@ export default class Collision extends Behaviour {
           this.delta
             .clone()
             .normalize()
-            .scalar(overlap * -averageMass1)
+            .multiplyScalar(overlap * -averageMass1)
         );
 
         otherParticle.position.add(
-          this.delta.normalize().scalar(overlap * averageMass2)
+          this.delta.normalize().multiplyScalar(overlap * averageMass2)
         );
 
         this.onCollide && this.onCollide(particle, otherParticle);

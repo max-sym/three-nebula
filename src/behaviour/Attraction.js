@@ -121,8 +121,8 @@ export default class Attraction extends Behaviour {
       this.lengthSq < this.radiusSq
     ) {
       this.attractionForce.normalize();
-      this.attractionForce.scalar(1 - this.lengthSq / this.radiusSq);
-      this.attractionForce.scalar(this.force);
+      this.attractionForce.multiplyScalar(1 - this.lengthSq / this.radiusSq);
+      this.attractionForce.multiplyScalar(this.force);
 
       particle.acceleration.add(this.attractionForce);
     }

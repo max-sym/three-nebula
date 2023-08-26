@@ -260,17 +260,12 @@ export default class Particle {
    */
   update(time) {
     if (!this.sleep) {
-      const realTime = time / this.fractions;
-
       if (!this.parent) return;
 
-      const idx = this.index - this.subindex;
-      const prevAge = this.parent.particles[idx < 0 ? 0 : idx].age;
-
-      this.age = prevAge + realTime * (this.fractions - this.subindex);
+      this.age += time;
       this.acceleration.clear();
 
-      this.behaviours.forEach(b => b.applyBehaviour(this, realTime));
+      this.behaviours.forEach(b => b.applyBehaviour(this, time));
     }
 
     if (this.age >= this.life) {

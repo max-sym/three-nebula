@@ -12,11 +12,7 @@ import EventDispatcher, {
   PARTICLE_UPDATE,
   SYSTEM_UPDATE,
 } from '../events';
-import {
-  INTEGRATION_TYPE_EULER,
-  integrate,
-  eulerIntegrationEmitter,
-} from '../math';
+import { integrate } from '../math';
 import { Util } from '../utils';
 
 import { InitializerUtil } from '../initializer';
@@ -46,6 +42,8 @@ export default class Emitter extends Particle {
      * @type {string}
      */
     this.type = type;
+
+    this.substeps = 1;
 
     /**
      * @desc The particles emitted by this emitter.
@@ -155,6 +153,12 @@ export default class Emitter extends Particle {
    */
   setRate(rate) {
     this.rate = rate;
+
+    return this;
+  }
+
+  setSubsteps(substeps) {
+    this.substeps = substeps;
 
     return this;
   }
@@ -523,11 +527,11 @@ export default class Emitter extends Particle {
    *
    * @return {Emitter}
    */
-  createParticle(subindex) {
+  createParticle() {
     const particle = this.parent.pool.get(Particle);
     const index = this.particles.length;
 
-    this.setupParticle(particle, index, subindex, this.cID);
+    this.setupParticle(particle, index);
     this.parent && this.parent.dispatch(PARTICLE_CREATED, particle);
     this.bindEmitterEvent && this.dispatch(PARTICLE_CREATED, particle);
 
@@ -541,11 +545,9 @@ export default class Emitter extends Particle {
    * @param {Particle} particle - The particle to setup
    * @return void
    */
-  setupParticle(particle, index, subindex, fractions) {
+  setupParticle(particle, index) {
     const { initializers, behaviours } = this;
 
-    particle.subindex = subindex;
-    particle.fractions = fractions;
     particle.parent = this;
     particle.index = index;
 
@@ -578,11 +580,22 @@ export default class Emitter extends Particle {
       this.destroy();
     }
 
-    if (this.isEmitting) {
-      this.generate(time);
+    const start = Math.max(0, this.particles.length - this.substeps);
+
+    const realTime = time / this.substeps;
+
+    this.cID = Math.max(0, this.getEmits(realTime));
+
+    for (let step = 0; step < this.substeps; step++) {
+      this.generate(realTime);
+      integrate(this, realTime, 1 - this.damping);
+      this.integrate(realTime, start, this.particles.length);
+      // this.integrate(realTime, 0, this.particles.length);
     }
 
-    this.integrate(time);
+    this.integrate(time, 0, start);
+
+    this.updateEmitterBehaviours(time);
 
     let i = this.particles.length;
 
@@ -599,10 +612,6 @@ export default class Emitter extends Particle {
         }
       }
     }
-
-    this.particles.forEach((p, idx) => (p.index = idx));
-
-    this.updateEmitterBehaviours(time);
   }
 
   /**
@@ -630,26 +639,34 @@ export default class Emitter extends Particle {
    * @param {number} time - System engine time
    * @return void
    */
-  integrate(time) {
-    const integrationType = this.parent
-      ? this.parent.integrationType
-      : INTEGRATION_TYPE_EULER;
-    const damping = 1 - this.damping;
+  integrate(time, start, end) {
+    let i = end;
 
-    eulerIntegrationEmitter(this, time, damping, integrationType);
-
-    let i = this.particles.length;
-
-    while (i--) {
+    while (i > start) {
+      i--;
       const particle = this.particles[i];
 
       particle.update(time);
       if (particle.dead) continue;
 
-      integrate(particle, time, damping, integrationType);
+      integrate(particle, time, 1 - particle.damping);
 
       this.parent && this.parent.dispatch(PARTICLE_UPDATE, particle);
       this.bindEmitterEvent && this.dispatch(PARTICLE_UPDATE, particle);
+    }
+  }
+
+  getEmits(time) {
+    if (this.totalEmitTimes === 1) {
+      this.totalEmitTimes = 0;
+
+      return this.rate.getValue(99999);
+    }
+
+    this.currentEmitTime += time;
+
+    if (this.currentEmitTime < this.totalEmitTimes) {
+      return this.rate.getValue(time);
     }
   }
 
@@ -659,35 +676,11 @@ export default class Emitter extends Particle {
    * @param {number} time - System engine time
    * @return void
    */
-  generate(time) {
-    if (this.totalEmitTimes === 1) {
-      let i = this.rate.getValue(99999);
+  generate() {
+    let i = this.cID;
 
-      if (i > 0) {
-        this.cID = i;
-      }
-
-      while (i--) {
-        this.createParticle(this.cID - i - 1);
-      }
-
-      this.totalEmitTimes = 0;
-
-      return;
-    }
-
-    this.currentEmitTime += time;
-
-    if (this.currentEmitTime < this.totalEmitTimes) {
-      let i = this.rate.getValue(time);
-
-      if (i > 0) {
-        this.cID = i;
-      }
-
-      while (i--) {
-        this.createParticle(this.cID - i - 1);
-      }
+    while (i--) {
+      this.createParticle();
     }
   }
 

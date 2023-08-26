@@ -44,7 +44,7 @@ Velocity.prototype.initialize = (function() {
   return function initialize(particle) {
     if (this.type !== INITIALIZER_TYPE_VECTOR_VELOCITY) {
       this._useV &&
-        this.dirVec.copy(this.dir).scalar(this.radiusPan.getValue());
+        this.dirVec.copy(this.dir).multiplyScalar(this.radiusPan.getValue());
       tha = this.tha * Math.random();
 
       MathUtils.getNormal(this.dirVec, normal);

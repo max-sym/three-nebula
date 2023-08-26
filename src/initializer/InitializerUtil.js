@@ -33,13 +33,9 @@ export default {
    * @return void
    */
   bindEmitter: function(emitter, particle) {
-    const {
-      rotation: { x, y, z },
-    } = emitter;
-
     particle.position.add(emitter.position);
     particle.velocity.add(emitter.velocity);
     particle.acceleration.add(emitter.acceleration);
-    particle.velocity.applyEuler(particleEuler.set(x, y, z));
+    particle.velocity.applyEuler(particleEuler.copy(emitter.rotation));
   },
 };

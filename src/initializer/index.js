@@ -6,6 +6,7 @@ export { default as Mass } from './Mass';
 export { default as Position } from './Position';
 export { default as Rotation } from './Rotation';
 export { default as Radius } from './Radius';
+export { AirResistance } from './AirResistance';
 export { default as Rate } from './Rate';
 export { default as Texture } from './Texture';
 export { VectorVelocity, PolarVelocity, RadialVelocity } from './Velocity';

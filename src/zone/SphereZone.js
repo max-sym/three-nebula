@@ -112,7 +112,7 @@ SphereZone.prototype._bound = (function() {
         .normalize();
       v.copy(particle.velocity);
       k = 2 * v.dot(normal);
-      particle.velocity.sub(normal.scalar(k));
+      particle.velocity.sub(normal.multiplyScalar(k));
     }
   };
 })();
