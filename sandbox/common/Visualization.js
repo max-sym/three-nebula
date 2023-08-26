@@ -53,6 +53,12 @@ window.Visualization = class {
     this.render();
   }
 
+  togglePause = e => {
+    if (e.key === 'p') {
+      this.shouldAnimate = !this.shouldAnimate;
+    }
+  };
+
   /**
    * Renders the visualization.
    *
@@ -68,8 +74,10 @@ window.Visualization = class {
     }
 
     window.addEventListener('resize', () => this.resize());
+    window.addEventListener('keydown', this.togglePause);
 
     const animate = () => {
+      this.rafId = requestAnimationFrame(animate);
       if (!this.shouldAnimate) {
         return;
       }
@@ -79,8 +87,6 @@ window.Visualization = class {
 
         return cancelAnimationFrame(this.rafId);
       }
-
-      this.rafId = requestAnimationFrame(animate);
 
       this.renderTicks++;
       this.particleSystem.update();
@@ -105,7 +111,6 @@ window.Visualization = class {
       webGlRenderer,
       canvas: { clientWidth, clientHeight },
     } = this;
-
 
     camera.aspect = clientWidth / clientHeight;
     camera.updateProjectionMatrix();

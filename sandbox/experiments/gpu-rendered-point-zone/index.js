@@ -38,17 +38,18 @@ const createEmitter = () => {
   const emitter = new Emitter();
 
   return emitter
-    .setRate(new Rate(new Span(10, 10), new Span(0.01)))
+    .setRate(new Rate(new Span(30, 30), new Span(0.01666)))
     .addInitializers([
       new Body(createSprite()),
       new Mass(1),
-      new Life(0.05),
+      new Life(0.07),
       new Position(new PointZone(0, 0, 0)),
-      new VectorVelocity(new Vector3D(1000, 0, 0), 10),
+      new VectorVelocity(new Vector3D(1000, 0, 0), 1),
     ])
     .addBehaviours([
-      new Scale(1, 1),
-      new Color(0xffffff, 0xffffff),
+      new Alpha(0.5, 0),
+      new Scale(0.5, new Span(1, 2)),
+      new Color(0x5555ff, 0xff0000),
       new Gravity(300),
     ])
     .emit();

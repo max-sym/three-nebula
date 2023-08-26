@@ -17,12 +17,14 @@ import {
   integrate,
   eulerIntegrationEmitter,
 } from '../math';
-import { Util, uid } from '../utils';
+import { Util } from '../utils';
 
 import { InitializerUtil } from '../initializer';
 import Particle from '../core/Particle';
 import isNumber from 'lodash/isNumber';
 import { EMITTER_TYPE_EMITTER as type } from './types';
+
+let emitterIds = 0;
 
 /**
  * Emitters are the System engine's particle factories. They cause particles to
@@ -117,7 +119,8 @@ export default class Emitter extends Particle {
      * @desc The emitter's id.
      * @type {string}
      */
-    this.id = `emitter-${uid()}`;
+    emitterIds++;
+    this.id = emitterIds;
     this.cID = 0;
     this.name = 'Emitter';
 
@@ -597,6 +600,8 @@ export default class Emitter extends Particle {
       }
     }
 
+    this.particles.forEach((p, idx) => (p.index = idx));
+
     this.updateEmitterBehaviours(time);
   }
 
@@ -638,9 +643,8 @@ export default class Emitter extends Particle {
     while (i--) {
       const particle = this.particles[i];
 
-      if (particle.dead) continue;
-
       particle.update(time);
+      if (particle.dead) continue;
 
       integrate(particle, time, damping, integrationType);
 
@@ -664,7 +668,7 @@ export default class Emitter extends Particle {
       }
 
       while (i--) {
-        this.createParticle(i);
+        this.createParticle(this.cID - i - 1);
       }
 
       this.totalEmitTimes = 0;
@@ -682,7 +686,7 @@ export default class Emitter extends Particle {
       }
 
       while (i--) {
-        this.createParticle(i);
+        this.createParticle(this.cID - i - 1);
       }
     }
   }
