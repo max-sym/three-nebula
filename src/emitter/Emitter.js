@@ -44,6 +44,7 @@ export default class Emitter extends Particle {
     this.type = type;
 
     this.substeps = 1;
+    this.delta = 1 / 60;
 
     /**
      * @desc The particles emitted by this emitter.
@@ -580,13 +581,17 @@ export default class Emitter extends Particle {
       this.destroy();
     }
 
-    const start = Math.max(0, this.particles.length - this.substeps);
+    const fractionedSubstep = ~~((this.delta / (1 / 60)) * this.substeps);
 
-    const realTime = time / this.substeps;
+    const realSubsteps = Math.min(50, Math.max(1, fractionedSubstep));
+
+    const start = Math.max(0, this.particles.length - realSubsteps);
+
+    const realTime = time / realSubsteps;
 
     this.cID = Math.max(0, this.getEmits(realTime));
 
-    for (let step = 0; step < this.substeps; step++) {
+    for (let step = 0; step < realSubsteps; step++) {
       this.generate(realTime);
       integrate(this, realTime, 1 - this.damping);
       this.integrate(realTime, start, this.particles.length);
