@@ -44,7 +44,7 @@ export default class Span {
    */
   getValue(INT) {
     if (this._isArray) {
-      return this.a[(this.a.length * Math.random()) >> 0];
+      return this.a[(this.a.length * MathUtils.random()) >> 0];
     } else {
       if (!this._center) return MathUtils.randomAToB(this.a, this.b, INT);
       else return MathUtils.randomFloating(this.a, this.b, INT);

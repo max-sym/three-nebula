@@ -151,26 +151,7 @@ export default class Particle {
      * @type {Vector3D}
      */
     this.acceleration = new Vector3D();
-    /**
-     * @desc The particle's last position, velocity and acceleration
-     * @type {Vector3D}
-     */
-    this.old = {};
-    /**
-     * @desc The particle's old position
-     * @type {Vector3D}
-     */
-    this.old.position = this.position.clone();
-    /**
-     * @desc The particle's old velocity
-     * @type {Vector3D}
-     */
-    this.old.velocity = this.velocity.clone();
-    /**
-     * @desc The particle's old acceleration
-     * @type {Vector3D}
-     */
-    this.old.acceleration = this.acceleration.clone();
+
     /**
      * @desc The particle's behaviours array
      * @type {array}
@@ -236,9 +217,6 @@ export default class Particle {
     this.position.set(0, 0, 0);
     this.velocity.set(0, 0, 0);
     this.acceleration.set(0, 0, 0);
-    this.old.position.set(0, 0, 0);
-    this.old.velocity.set(0, 0, 0);
-    this.old.acceleration.set(0, 0, 0);
     this.color.r = 0;
     this.color.g = 0;
     this.color.b = 0;
@@ -259,22 +237,26 @@ export default class Particle {
    * @return void
    */
   update(time) {
-    if (!this.sleep) {
-      if (!this.parent) return;
+    if (this.sleep) return;
 
-      this.age += time;
-      this.acceleration.clear();
+    this.age += time;
+    this.acceleration.clear();
 
-      this.behaviours.forEach(b => b.applyBehaviour(this, time));
+    let i = this.behaviours.length;
+
+    while (i--) {
+      this.behaviours[i].applyBehaviour(this, time);
     }
 
     if (this.age >= this.life) {
       this.destroy();
-    } else {
-      const scale = this.easing(this.age / this.life);
 
-      this.energy = Math.max(1 - scale, 0);
+      return;
     }
+
+    const scale = this.easing(this.age / this.life);
+
+    this.energy = Math.max(1 - scale, 0);
   }
 
   /**

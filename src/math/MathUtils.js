@@ -1,9 +1,32 @@
 import { PI } from '../constants';
 
+const randoms = [];
+const generateRandoms = () => {
+  const randomsCount = 1000;
+
+  let i = randomsCount;
+
+  while (i--) {
+    randoms.push(Math.random());
+  }
+};
+
+let currentRandom = 0;
+
+generateRandoms();
+
 export default {
+  random: function() {
+    currentRandom++;
+
+    if (currentRandom > randoms.length - 1)
+      currentRandom = ~~(Math.random() * randoms.length);
+
+    return randoms[currentRandom];
+  },
   randomAToB: function(a, b, INT) {
-    if (!INT) return a + Math.random() * (b - a);
-    else return ((Math.random() * (b - a)) >> 0) + a;
+    if (!INT) return a + this.random() * (b - a);
+    else return ((this.random() * (b - a)) >> 0) + a;
   },
   randomFloating: function(center, f, INT) {
     return this.randomAToB(center - f, center + f, INT);
@@ -21,8 +44,7 @@ export default {
 
   randomColor: function() {
     return (
-      '#' +
-      ('00000' + ((Math.random() * 0x1000000) << 0).toString(16)).slice(-6)
+      '#' + ('00000' + ((this.random * 0x1000000) << 0).toString(16)).slice(-6)
     );
   },
 

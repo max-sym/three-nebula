@@ -45,6 +45,7 @@ export default class Emitter extends Particle {
 
     this.substeps = 1;
     this.delta = 1 / 60;
+    this.maxSubsteps = 100;
 
     /**
      * @desc The particles emitted by this emitter.
@@ -583,7 +584,10 @@ export default class Emitter extends Particle {
 
     const fractionedSubstep = ~~((this.delta / (1 / 60)) * this.substeps);
 
-    const realSubsteps = Math.min(50, Math.max(1, fractionedSubstep));
+    const realSubsteps = Math.min(
+      this.maxSubsteps,
+      Math.max(1, fractionedSubstep)
+    );
 
     const start = Math.max(0, this.particles.length - realSubsteps);
 
@@ -595,7 +599,6 @@ export default class Emitter extends Particle {
       this.generate(realTime);
       integrate(this, realTime, 1 - this.damping);
       this.integrate(realTime, start, this.particles.length);
-      // this.integrate(realTime, 0, this.particles.length);
     }
 
     this.integrate(time, 0, start);
@@ -615,7 +618,10 @@ export default class Emitter extends Particle {
         if (this.particles.length === 0) {
           this.parent && this.parent.dispatch(SYSTEM_UPDATE);
         }
+
+        continue;
       }
+      this.dispatchUpdates(particle);
     }
   }
 
@@ -655,10 +661,12 @@ export default class Emitter extends Particle {
       if (particle.dead) continue;
 
       integrate(particle, time, 1 - particle.damping);
-
-      this.parent && this.parent.dispatch(PARTICLE_UPDATE, particle);
-      this.bindEmitterEvent && this.dispatch(PARTICLE_UPDATE, particle);
     }
+  }
+
+  dispatchUpdates(particle) {
+    this.parent && this.parent.dispatch(PARTICLE_UPDATE, particle);
+    this.bindEmitterEvent && this.dispatch(PARTICLE_UPDATE, particle);
   }
 
   getEmits(time) {

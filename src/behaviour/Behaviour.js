@@ -146,9 +146,7 @@ export default class Behaviour {
    * @return mixed
    */
   applyBehaviour(target, time, index) {
-    if (!this.isEnabled) {
-      return;
-    }
+    if (!this.isEnabled) return;
 
     this.mutate(target, time, index);
   }
@@ -173,9 +171,7 @@ export default class Behaviour {
    * @return void
    */
   energize(particle, time) {
-    if (this.dead) {
-      return;
-    }
+    if (this.dead) return;
 
     this.age += time;
 

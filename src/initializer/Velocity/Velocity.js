@@ -45,11 +45,12 @@ Velocity.prototype.initialize = (function() {
     if (this.type !== INITIALIZER_TYPE_VECTOR_VELOCITY) {
       this._useV &&
         this.dirVec.copy(this.dir).multiplyScalar(this.radiusPan.getValue());
-      tha = this.tha * Math.random();
+
+      tha = this.tha * MathUtils.random();
 
       MathUtils.getNormal(this.dirVec, normal);
       v.copy(this.dirVec).applyAxisAngle(normal, tha);
-      v.applyAxisAngle(this.dirVec.normalize(), Math.random() * PI * 2);
+      v.applyAxisAngle(this.dirVec.normalize(), MathUtils.random() * PI * 2);
       particle.velocity.copy(v);
     } else {
       particle.velocity.copy(this.dir);

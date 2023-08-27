@@ -5,6 +5,7 @@ const {
   Color,
   AirResistance,
   CrossZone,
+  Rotate,
   Emitter,
   Force,
   Gravity,
@@ -18,6 +19,7 @@ const {
   Span,
   SpriteRenderer,
   GPURenderer,
+  RandomDrift,
   Vector3D,
   Position,
   PointZone,
@@ -43,8 +45,11 @@ const createEmitter = side => {
   emitter.velocity = velocityForward.clone();
   emitter.damping = 0.0;
 
+  const color = new Color(0x5555ff, 0xff0000);
+  color.same = true;
+
   return emitter
-    .setSubsteps(25)
+    .setSubsteps(150)
     .setRate(new Rate(1, new Span(0.016 / emitter.substeps)))
     .addInitializers([
       new Body(createSprite()),
@@ -55,9 +60,11 @@ const createEmitter = side => {
       new AirResistance(0.4),
     ])
     .addBehaviours([
-      new Alpha(1, 0),
+      new Alpha(0.2, 0),
       new Scale(0.5, new Span(1, 2)),
-      new Color(0x5555ff, 0xff0000),
+      new RandomDrift(500, 500, 500, 0.01),
+      new Rotate(0, 5, 0),
+      color,
     ])
     .emit();
 };

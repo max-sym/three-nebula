@@ -5,6 +5,12 @@ import Behaviour from './Behaviour';
 import { getEasingByName } from '../ease';
 import { BEHAVIOUR_TYPE_ROTATE as type } from './types';
 
+// Enums
+const RotationTypeSame = 1;
+const RotationTypeSet = 2;
+const RotationTypeTo = 3;
+const RotationTypeAdd = 4;
+
 /**
  * Behaviour that rotates particles.
  */
@@ -78,14 +84,14 @@ export default class Rotate extends Behaviour {
      */
     this.z = z || 0;
 
-    if (x === undefined || x == 'same') {
-      this.rotationType = 'same';
+    if (x === undefined || x == RotationTypeSame) {
+      this.rotationType = RotationTypeSame;
     } else if (y == undefined) {
-      this.rotationType = 'set';
+      this.rotationType = RotationTypeSet;
     } else if (z === undefined) {
-      this.rotationType = 'to';
+      this.rotationType = RotationTypeTo;
     } else {
-      this.rotationType = 'add';
+      this.rotationType = RotationTypeAdd;
       this.x = createSpan(this.x * DR);
       this.y = createSpan(this.y * DR);
       this.z = createSpan(this.z * DR);
@@ -102,21 +108,21 @@ export default class Rotate extends Behaviour {
    */
   initialize(particle) {
     switch (this.rotationType) {
-      case 'same':
+      case RotationTypeSame:
         break;
 
-      case 'set':
+      case RotationTypeSet:
         this._setRotation(particle.rotation, this.x);
         break;
 
-      case 'to':
+      case RotationTypeTo:
         particle.transform.fR = particle.transform.fR || new Vector3D();
         particle.transform.tR = particle.transform.tR || new Vector3D();
         this._setRotation(particle.transform.fR, this.x);
         this._setRotation(particle.transform.tR, this.y);
         break;
 
-      case 'add':
+      case RotationTypeAdd:
         particle.transform.addR = new Vector3D(
           this.x.getValue(),
           this.y.getValue(),
@@ -170,7 +176,7 @@ export default class Rotate extends Behaviour {
 
     switch (this.rotationType) {
       // orients the particle in the direction it is moving
-      case 'same':
+      case RotationTypeSame:
         if (!particle.rotation) {
           particle.rotation = new Vector3D();
         }
@@ -178,11 +184,11 @@ export default class Rotate extends Behaviour {
         particle.rotation.copy(particle.velocity);
         break;
 
-      case 'set':
+      case RotationTypeSet:
         //
         break;
 
-      case 'to':
+      case RotationTypeTo:
         particle.rotation.x = MathUtils.lerp(
           particle.transform.fR.x,
           particle.transform.tR.x,
@@ -200,7 +206,7 @@ export default class Rotate extends Behaviour {
         );
         break;
 
-      case 'add':
+      case RotationTypeAdd:
         particle.rotation.add(particle.transform.addR);
         break;
     }

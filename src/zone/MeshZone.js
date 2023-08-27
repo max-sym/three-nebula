@@ -1,3 +1,4 @@
+import { MathUtils } from '../math';
 import Zone from './Zone';
 import { ZONE_TYPE_MESH as type } from './types';
 
@@ -51,7 +52,7 @@ export default class MeshZone extends Zone {
 
   getPosition() {
     const vertices = this.geometry.vertices;
-    const rVector = vertices[(vertices.length * Math.random()) >> 0];
+    const rVector = vertices[(vertices.length * MathUtils.random()) >> 0];
 
     this.vector.x = rVector.x * this.scale;
     this.vector.y = rVector.y * this.scale;
